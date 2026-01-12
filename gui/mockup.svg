@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+  <rect x="0" y="0" width="1000" height="600" fill="#ffffff" stroke="#ddd"/>
+  <rect x="10" y="10" width="980" height="50" fill="#f5f5f7" stroke="#ccc"/>
+  <text x="25" y="40" font-family="sans-serif" font-size="18">libexword GUI（モック）</text>
+
+  <!-- Left pane: devices -->
+  <rect x="10" y="70" width="300" height="480" fill="#fbfbfb" stroke="#ccc"/>
+  <text x="25" y="95" font-family="sans-serif" font-size="14">デバイス</text>
+  <rect x="25" y="115" width="270" height="420" fill="#fff" stroke="#eee"/>
+  <text x="40" y="140" font-family="sans-serif" font-size="12" fill="#888">(例) EX-word: /dev/usb/xxx</text>
+
+  <!-- Right pane: files and actions -->
+  <rect x="320" y="70" width="670" height="360" fill="#fff" stroke="#ccc"/>
+  <text x="335" y="95" font-family="sans-serif" font-size="14">ファイル一覧</text>
+  <rect x="335" y="115" width="640" height="315" fill="#fafafa" stroke="#eee"/>
+  <text x="350" y="140" font-family="sans-serif" font-size="12" fill="#888">Name		Size		Date</text>
+  <line x1="350" y1="150" x2="950" y2="150" stroke="#eee"/>
+  <text x="350" y="170" font-family="sans-serif" font-size="12">example.txt	1.2KB	2026-01-01</text>
+  <text x="350" y="190" font-family="sans-serif" font-size="12">data.bmp	12KB	2025-12-10</text>
+
+  <!-- Action buttons -->
+  <rect x="320" y="440" width="670" height="110" fill="#f7f7f9" stroke="#ccc"/>
+  <text x="335" y="465" font-family="sans-serif" font-size="14">操作</text>
+  <rect x="360" y="490" width="120" height="32" rx="4" ry="4" fill="#3b82f6" stroke="#2b6fdb"/>
+  <text x="394" y="512" font-family="sans-serif" font-size="12" fill="#fff">Upload</text>
+  <rect x="500" y="490" width="120" height="32" rx="4" ry="4" fill="#10b981" stroke="#0b9a6b"/>
+  <text x="534" y="512" font-family="sans-serif" font-size="12" fill="#fff">Download</text>
+  <rect x="640" y="490" width="120" height="32" rx="4" ry="4" fill="#ef4444" stroke="#cc3333"/>
+  <text x="668" y="512" font-family="sans-serif" font-size="12" fill="#fff">Delete</text>
+  <rect x="780" y="490" width="120" height="32" rx="4" ry="4" fill="#f3f4f6" stroke="#d1d5db"/>
+  <text x="815" y="512" font-family="sans-serif" font-size="12" fill="#111827">Refresh</text>
+
+  <!-- Status bar -->
+  <rect x="10" y="560" width="980" height="30" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="25" y="580" font-family="sans-serif" font-size="12" fill="#444">Status: Ready</text>
+
+</svg>

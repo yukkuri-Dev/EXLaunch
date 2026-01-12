@@ -1,12 +1,11 @@
-CASIO Ex-Word protocol documentation
+CASIO Ex-Word プロトコルドキュメント
 ====================================
 
-The protocol used by Casio EX-Word electronic dictionaries is a slightly
-modified version obex. This custom version prefixes each request with a
-sequence number. The response packet is then preceded by a one byte packet
-containing the sequence number of the request.
+Casio EX-Word 電子辞書が使うプロトコルは、標準 OBEX の修正版です。
+このカスタム実装では、各リクエストの先頭にシーケンス番号が付きます。
+レスポンスはリクエストのシーケンス番号を含む1バイトのパケットに続いて返されます。
 
-example of a request/response exchange
+リクエスト/レスポンスの例
 request:   <seq> <opcode> <packet length> <headers...>
 response:  <seq>
            <response code> <response length> <headers...>
@@ -14,16 +13,12 @@ response:  <seq>
 List of commands:
 
 Connect
-  This command must be the first one you send and is used to make a
-  connection to the obex server on the dictionary.
+  このコマンドは最初に送る必要があり、辞書上の OBEX サーバへ接続します。
 
-  The request/response for the connect string is defined the same as
-  in standard obex except that in the request the version byte is used
-  to specifiy operating mode, there are also an additional three
-  bytes with the values 0x40, 0x00 and a third byte specifiying the
-  region.
+  リクエスト/レスポンスは標準 OBEX と同様ですが、リクエストのバージョンバイトが動作モードを示し、
+  さらに 0x40, 0x00 と地域を示す1バイトの合計3バイトが追加されます。
 
-  Valid regions:
+  有効な地域コード:
      Japanese = 0x20
      Korean   = 0x40
      Chinese  = 0x60
@@ -32,235 +27,182 @@ Connect
      French   = 0xc0
      Russian  = 0xe0
 
-  Modes:
+  モード:
      TextLoader = <region>
      Library    = <region> - 0xf
      CDLoader   = 0xf0
 
 Disconnect
-  This command sends a disconnect to the dictionary and shuts down the usb
-  device. It uses the standard obex disconnect opcode with no additional
-  headers.
+  ディクショナリへ disconnect を送り、USB デバイスを終了します。
+  標準の OBEX disconnect opcode を使用し、追加ヘッダはありません。
 
 Setpath
-  Changes the current path on the dictionary.
+  デバイスのカレントパスを変更します。
 
-  Each pathname needs to begin with either /_INTERNAL_00 or /_SD_00 which
-  specify which storage device we are accessing either internal memory or
-  the currently inserted SD card.
+  パスは /_INTERNAL_00 または /_SD_00 で始め、内部メモリか挿入中の SD カードを指定します。
 
   Request:
-    Uses the 0x85 (setpath) opcode followed by a name header containing the
-    Unicode pathname.
+    0x85 (setpath) opcode を使い、name ヘッダに Unicode パス名を含めます。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 Capacity
-  Retrieves capacity of currently selected storage device.
+  現在選択されている記憶デバイスの容量を取得します。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header containing the
-    Unicode string "_Cap".
+    0x83 (get) opcode を使い、name ヘッダに "_Cap" の Unicode 文字列を含めます。
   Response:
-    The response returns a length header and end of body header.
-    The length header contains the length of data sent in the end of body
-    header and should contain the value 8. The end of body header contains
-    two 4 byte numbers in network byte order with the first representing the
-    total capacity and the second one represents amount of space used.
+    length ヘッダと end of body ヘッダが返されます。
+    length ヘッダは end of body に含まれるデータ長を示し、通常は 8 です。
+    end of body はネットワークバイト順の 4 バイト整数が2つ入り、1つ目が総容量、2つ目が使用済み容量です。
 
 Model
-  Get model information.
+  モデル情報を取得します。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header containing the
-    Unicode string "_Model".
+    0x83 (get) opcode を使い、name ヘッダに "_Model" の Unicode 文字列を含めます。
   Response:
-    The response returns a length header and end of body header.
-    The length header contains the length of data sent in the end of body
-    header. The end of body header contains two null terminated strings
-    containing the model information. So far the first one seems to always
-    be the same for all models tested.
+    length ヘッダと end of body ヘッダが返されます。
+    end of body にはモデル情報を含む2つのヌル終端文字列が入ります。現状、最初の文字列は全モデルで同じようです。
 
 List
-  Return directory information for the currently selected path.
+  カレントパスのディレクトリ情報を返します。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header containing the
-    Unicode string "_List".
+    0x83 (get) opcode を使い、name ヘッダに "_List" の Unicode 文字列を含めます。
   Response:
-    The response returns a length header and end of body header.
-    The length header contains the length of data sent in the end of body
-    header. The end of body header contains the directory information as
-    an array of the following structure.
+    length ヘッダと end of body ヘッダが返されます。
+    end of body にはディレクトリ情報が配列形式で入り、以下の構造が繰り返されます。
 
     struct directory_entry {
-        uint16_t size;  //size of structure
-        uint8_t  flags; //file = 0, directory = 1, unicode/longname = 2
-        uint8_t  name[]; //name of file/directory
+        uint16_t size;  // 構造体の大きさ
+        uint8_t  flags; // file = 0, directory = 1, unicode/longname = 2
+        uint8_t  name[]; // ファイル/ディレクトリ名
     }
 
 Remove
-  Removes a file from currently selected path.
+  カレントパスからファイルを削除します。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_Remove". Following the name header are a length and
-    end of body header. The length gives the length of data in the end of
-    body header and the end of body header contains a null terminated string
-    of the filename to remove.
+    0x82 (put) opcode を使い、name ヘッダに "_Remove" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、end of body には削除するファイル名のヌル終端文字列が入ります。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
-  On DataPlus 5+ devices the name of the file is a utf16 string when in
-  Text mode.
+  DataPlus 5 以降の端末では、Text モード時にファイル名は UTF-16 文字列です。
 
 SdFormat
-  Formats currently inserted SD Card
+  挿入中の SD カードをフォーマットします。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_SdFormat". Following the name header are a length and
-    end of body header. The length gives the length of data in the end of
-    body header and the end of body header contains only a null character.
-
+    0x82 (put) opcode を使い、name ヘッダに "_SdFormat" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、end of body はヌル文字のみを含みます。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 Send file
-  Sends a file to the dictionary.
+  ファイルを辞書に送信します。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name, length, and body/end of body
-    headers. The name header is a Unicode string containing the name of the
-    file being sent, the length header should contain the total size of the
-    file and the body/end of body headers contain the actual file data.
+    0x82 (put) opcode を使い、name, length, body/end of body ヘッダを含めます。
+    name ヘッダは送信するファイル名（Unicode）、length ヘッダはファイル全体のサイズ、
+    body/end of body ヘッダにファイルデータが入ります。
 
-    If the file is greater then max packet size it will be split across multiple
-    put requests only the first one will include the name and length headers.
+    ファイルが最大パケットサイズを超える場合は複数の put リクエストに分割され、
+    最初のリクエストのみ name と length ヘッダを含みます。
   Response:
-    Contains no additional headers.
-
+    追加ヘッダはありません。
 
 Get file
-  Sends a file to the dictionary.
+  ファイルを辞書から取得します。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header. The name header is
-    a Unicode string containing the name of the file being retrieved.
+    0x83 (get) opcode を使い、name ヘッダに取得するファイル名（Unicode）を含めます。
   Response:
-    The response returns a length header and body/end of body headers.
-    The length header contains the length of data sent in the body/end of
-    body headers. The body/end of body headers contain the file data
-    retrieved.
+    length ヘッダと body/end of body ヘッダが返されます。
+    length ヘッダは body に含まれるデータ長を示します。body/end of body ヘッダにファイルデータが入ります。
 
-    If the file is large enough(more then about 4k), it will be split across
-    multiple response packets. In this case only the first response contains
-    the length header.
+    ファイルが大きい場合（約4KB 以上）は複数のレスポンスに分割され、最初のレスポンスのみ length ヘッダを含みます。
 
 
 AuthChallenge
-  Sends an authentication request to the dictionary.
+  辞書へ認証リクエストを送ります。
 
-  This command must be issued in Library mode before many commands suchs as
-  delete, upload, capacity, etc will work. Somewhat interestingly the List
-  command does not require authentication and will if issued cause the other
-  commands requring authentication to work as if you had issued a successful
-  AuthChallenge command.
+  このコマンドは Library モードで実行する必要があります。delete, upload, capacity 等の多くのコマンドは認証が必要です。
+  興味深いことに、List コマンドは認証不要で、実行すると他の認証が必要なコマンドが
+  まるで AuthChallenge 成功後の状態のように動作することがあります。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_AuthChallenge". Following the name header are a length
-    and end of body header. The length should always be 20 and the end of
-    body header should contain the the 20 byte authentication key.
+    0x82 (put) opcode を使い、name ヘッダに "_AuthChallenge" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、length は常に 20、end of body は 20 バイトの認証キーを含みます。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 AuthInfo
-  Resets dictionary authentication info stored in authinfo.inf.
+  authinfo.inf に保存された認証情報をリセットします。
 
-  When run this command will also delete all dictionaries currently
-  installed on device.
+  このコマンド実行時にデバイス上のインストール済み辞書はすべて削除されます。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header containing the
-    Unicode string "_AuthInfo". Following the name header is a 40 byte
-    non-standard header (0x70) contaning data used to generate a new
-    authkey.
+    0x83 (get) opcode を使い、name ヘッダに "_AuthInfo" の Unicode 文字列を含めます。
+    その後に 40 バイトの非標準ヘッダ (0x70) が続き、これは新しい authkey を生成するためのデータです。
   Response:
-    The response returns a length header that and end of body header.
-    The length header will always be 20 and the end of body header will
-    contain the new 20 byte authkey.
+    length ヘッダと end of body ヘッダが返されます。length は常に 20 で、end of body に新しい 20 バイトの authkey が入ります。
 
 UserId
-  Sets userid of dictionary.
+  辞書のユーザーID を設定します。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_UserId". Following the name header are a length header
-    and end of body header. The length should always be 17 and the end of body
-    header contains the new username, this should be zero padded to a length
-    of 17.
+    0x82 (put) opcode を使い、name ヘッダに "_UserId" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、length は常に 17、end of body には
+    ヌルパディングされた 17 バイトのユーザ名が入ります。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 Unlock
-  Unlock device for adding/removing add-ons.
+  アドオンの追加/削除を行うためにデバイスを Unlock します。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_Unlock". Following the name header are a length and
-    end of body header. The length should always be 1 and the end of body
-    always contains a single null byte.
+    0x82 (put) opcode を使い、name ヘッダに "_Unlock" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、length は常に 1、end of body はヌル1バイトが入ります。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 Lock
-  Lock device after removing/adding an add-on.
+  アドオンの追加/削除の後にデバイスを Lock します。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_Lock". Following the name header are a length and
-    end of body header. The length should always be 1 and the end of body
-    always contains a single null byte.
+    0x82 (put) opcode を使い、name ヘッダに "_Lock" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、length は常に 1、end of body はヌル1バイトが入ります。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 CName
-  Specifies name of dictionary.
+  アドオン辞書の名前を指定します。
 
-  This comand is used to set the name of the add-on dictionary you wish to
-  access. It shold be sent immediately after then Unlock comamnd.
+  Unlock の直後に送る必要があります。
 
   Request:
-    Uses the 0x82 (put) opcode followed by a name header containing the
-    Unicode string "_CName". Following the name header are a length and
-    end of body header. The length header contains the length of the
-    end of body header and the end of body contains two null terminated
-    sjis encoded strings. The first should be the add-on's five character
-    ID. The second is the name of the add-on dictionary.
+    0x82 (put) opcode を使い、name ヘッダに "_CName" の Unicode 文字列を含めます。
+    その後に length と end of body ヘッダが続き、end of body には SJIS エンコードの
+    ヌル終端文字列が2つ入ります。最初は5文字のアドオン ID、2つ目がアドオン辞書名です。
   Response:
-    Contains no additional headers.
+    追加ヘッダはありません。
 
 CryptKey
-  Generates a new CryptKey.
+  新しい CryptKey を生成します。
 
-  The key returned is not used to directly encrypt the dictionary. Instead it
-  is used to generate a secondary key that does the actual encryption.
+  返されるキーは直接辞書を暗号化する鍵ではなく、実際の暗号化に使う二次鍵を生成するために使われます。
 
   Request:
-    Uses the 0x83 (get) opcode followed by a name header containing the
-    Unicode string "_CryptKey". Following the name header is a non-standard
-    header (0x71) containing a 28 byte block used to generate the encryption
-    key.
+    0x83 (get) opcode を使い、name ヘッダに "_CryptKey" の Unicode 文字列を含めます。
+    その後に非標準ヘッダ (0x71) が続き、28 バイトのブロックが鍵生成に使われます。
 
-    The algorithim used to generate the 16 byte key looks like the following:
+    16 バイト鍵の生成アルゴリズムは次のように見えます:
          b[0] b[1] b[2]  b[3]  b[4]  b[5]  b[6]  b[7]  b[8]  b[9]  b[10] b[11]
       +    0    0  b[16] b[17] b[18] b[19] b[20] b[21] b[22] b[23]    0     0
 
-    The last 4 bytes are b[24] - b[27], however only the first 12 are returned
-    in the response header.
+    最後の4バイトは b[24] - b[27] ですが、レスポンスヘッダに返されるのは最初の 12 バイトのみです。
   Response:
-    The response returns a length header that and end of body header.
-    The length header will always be 12 and the end of body header will
-    contain tthe first 12 bytes of the generated key.
+    length ヘッダと end of body ヘッダが返されます。length は常に 12 で、end of body に生成された鍵の最初の 12 バイトが入ります。
 

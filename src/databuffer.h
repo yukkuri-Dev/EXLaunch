@@ -28,12 +28,12 @@
 
 
 typedef struct {
-	uint8_t *buffer; // buffer containing the allocated space
-	uint8_t *data; // pointer to the location of *buffer where there is valid data
-	size_t head_avail; // number of allocated space available in front of buffer
-	size_t data_avail; // allocated space available not specific for head or tail
-	size_t tail_avail; // number of allocated space available at end of buffer
-	size_t data_size; // number of allocated space used
+	uint8_t *buffer; // 確保されたバッファ領域を指します
+	uint8_t *data; // *buffer 内で有効データがある位置を指します
+	size_t head_avail; // バッファ先頭にある利用可能な領域のサイズ
+	size_t data_avail; // head/tail に特定されない利用可能な領域のサイズ
+	size_t tail_avail; // バッファ末尾にある利用可能な領域のサイズ
+	size_t data_size; // 使用中のデータサイズ
 } buf_t;
 
 buf_t *buf_new(size_t default_size);

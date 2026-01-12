@@ -73,54 +73,52 @@ void setpath(struct state *s);
 void dict(struct state *s);
 
 struct command commands[] = {
-{"connect", connect, "connect [mode] [region]\t- connect to attached dictionary\n",
-	"Connects to device.\n\n"
-	"Region specifies the region of the device (default:ja).\n"
-	"Mode can be one of the following values:\n"
-	"library - connect as CASIO Library (default)\n"
-	"text    - connect as Textloader\n"
-	"cd      - connect as CDLoader\n"},
-{"disconnect", disconnect, "disconnect\t\t- disconnect from dictionary\n",
-	"Disconnects from device.\n"},
-{"model", model, "model\t\t\t- display model information\n",
-	"Displays model information of device.\n"},
-{"capacity", capacity, "capacity\t\t- display medium capacity\n",
-	"Displays capacity of current storage medium.\n"},
-{"format", format, "format\t\t\t- format SD card\n",
-	"Formats currently inserted SD Card.\n"},
-{"list", list, "list\t\t\t- list files\n",
-	"Lists files and directories under current path.\n\n"
-	"Directories are enclosed in <>.\n"
-	"Files or directories beginning with * were returned as unicode.\n"},
-{"delete", delete, "delete <filename>\t- delete a file\n",
-	"Deletes a file from dicionary.\n"},
-{"send", send, "send <filename>\t\t- upload a file\n",
-	"Uploads a file to dicionary.\n"},
-{"get", get, "get <filename>\t\t- download a file\n",
-	"Downloads a file from dicionary.\n"},
-{"setpath", setpath, "setpath <path>\t\t- changes directory on dictionary\n",
-	"Changes to the the specified path.\n\n"
-	"<path> is in the form of <sd|mem://<path>\n"
-	"Example: mem:/// - sets path to root of internal memory\n"},
-{"dict", dict, "dict <sub-function>\t- add-on dictionary commands\n",
-	"This command allows manipulation of add-on dictionaries. It uses\n"
-	"the storage medium of your current path as the storage device to\n"
-	"operate on. The reset sub-function WILL delete all installed\n"
-	"dictionaries.\n\n"
-	"Sub functions:\n"
-	"reset <user>\t  - resets authentication info\n"
-	"auth <user> <key> - authenticate to dictionary\n"
-	"list\t\t  - list installed add-on dictionaries\n"
-	"decrypt <id>\t  - decrypts specified add-on dictionary\n"
-	"remove  <id>\t  - removes specified add-on dictionary\n"
-	"install <id>\t  - installs specified add-on dictionary\n"},
-{"set", set, "set <option> [value]\t- sets program options\n",
-	"Sets <option> to [value], if no value is specified will display current value.\n\n"
-	"Available options:\n"
-	"debug <level>  - sets debug level (0-5)\n"
-	"mkdir <on|off> - specifies whether setpath should create directories\n"},
-{"exit", quit, "exit\t\t\t- exits program\n",
-	"Exits program and disconnects from device.\n"},
+{"connect", connect, "connect [mode] [region]\t- 辞書に接続\n",
+	"デバイスに接続します。\n\n"
+	"Region はデバイスの地域（デフォルト: ja）を指定します。\n"
+	"Mode は次のいずれかです:\n"
+	"library - CASIO Library として接続 (デフォルト)\n"
+	"text    - Textloader として接続\n"
+	"cd      - CDLoader として接続\n"},
+{"disconnect", disconnect, "disconnect\t\t- 切断\n",
+	"デバイスの接続を切断します。\n"},
+{"model", model, "model\t\t\t- モデル情報を表示\n",
+	"接続中デバイスのモデル情報を表示します。\n"},
+{"capacity", capacity, "capacity\t\t- 容量を表示\n",
+	"選択中ストレージの容量を表示します。\n"},
+{"format", format, "format\t\t\t- SD カードをフォーマット\n",
+	"挿入中の SD カードをフォーマットします。\n"},
+{"list", list, "list\t\t\t- ファイル一覧\n",
+	"カレントパスのファイルとディレクトリを一覧表示します。\n\n"
+	"ディレクトリは <> で囲まれます。\n"
+	"先頭に * が付く項目は Unicode で返されたものです。\n"},
+{"delete", delete, "delete <filename>\t- ファイルを削除\n",
+	"辞書からファイルを削除します。\n"},
+{"send", send, "send <filename>\t\t- ファイルをアップロード\n",
+	"辞書へファイルをアップロードします。\n"},
+{"get", get, "get <filename>\t\t- ファイルをダウンロード\n",
+	"辞書からファイルをダウンロードします。\n"},
+{"setpath", setpath, "setpath <path>\t\t- 辞書上のパス変更\n",
+	"指定されたパスに変更します。\n\n"
+	"<path> の形式は <sd|mem://<path> です。\n"
+	"例: mem:/// - 内部メモリのルートに設定\n"},
+{"dict", dict, "dict <sub-function>\t- アドオン辞書コマンド\n",
+	"アドオン辞書の操作を行います。現在のパスのストレージを操作対象とします。\n"
+	"reset サブコマンドはインストール済みの辞書をすべて削除します。\n\n"
+	"サブコマンド:\n"
+	"reset <user>\t  - 認証情報をリセット\n"
+	"auth <user> <key> - 辞書に対して認証\n"
+	"list\t\t  - インストール済みアドオン辞書を一覧表示\n"
+	"decrypt <id>\t  - 指定アドオン辞書を復号\n"
+	"remove  <id>\t  - 指定アドオン辞書を削除\n"
+	"install <id>\t  - 指定アドオン辞書をインストール\n"},
+{"set", set, "set <option> [value]\t- オプションを設定\n",
+	"<option> を [value] に設定します。値省略時は現在値を表示します。\n\n"
+	"利用可能なオプション:\n"
+	"debug <level>  - デバッグレベルを設定 (0-5)\n"
+	"mkdir <on|off> - setpath がディレクトリを作成するか指定\n"},
+{"exit", quit, "exit\t\t\t- 終了\n",
+	"プログラムを終了し、接続があれば切断します。\n"},
 {"help", help, NULL, NULL},
 {NULL, NULL, NULL, NULL}
 };

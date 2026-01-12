@@ -1,7 +1,7 @@
 #ifndef __LIST_H
 #define __LIST_H
 
-/* This file is from Linux Kernel (include/linux/list.h) 
+/* このファイルは Linux カーネル (include/linux/list.h) 由来です */
  * and modified by simply removing hardware prefetching of list items. 
  * Here by copyright, credits attributed to wherever they belong.
  * Kulesh Shanmugasundaram (kulesh [squiggly] isis.poly.edu)
@@ -52,7 +52,7 @@ static inline void __list_add(struct list_head *new,
  * @head: list head to add it after
  *
  * Insert a new entry after the specified head.
- * This is good for implementing stacks.
+ * スタック実装に適しています。
  */
 static inline void list_add(struct list_head *new, struct list_head *head)
 {
@@ -65,7 +65,7 @@ static inline void list_add(struct list_head *new, struct list_head *head)
  * @head: list head to add it before
  *
  * Insert a new entry before the specified head.
- * This is useful for implementing queues.
+ * キュー実装に便利です。
  */
 static inline void list_add_tail(struct list_head *new, struct list_head *head)
 {
@@ -88,7 +88,7 @@ static inline void __list_del(struct list_head *prev, struct list_head *next)
 /**
  * list_del - deletes entry from list.
  * @entry: the element to delete from the list.
- * Note: list_empty on entry does not return true after this, the entry is in an undefined state.
+ * 注意: entry に対する list_empty はこの後 true を返さず、エントリは未定義状態になります。
  */
 static inline void list_del(struct list_head *entry)
 {
@@ -181,7 +181,7 @@ static inline void list_splice_init(struct list_head *list,
 }
 
 /**
- * list_entry - get the struct for this entry
+ * list_entry - このエントリの構造体を取得する
  * @ptr:	the &struct list_head pointer.
  * @type:	the type of the struct this is embedded in.
  * @member:	the name of the list_struct within the struct.

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal GtkBuilder UI for libexword GUI mockup -->
+<interface>
+  <requires lib="gtk+" version="3.0"/>
+  <object class="GtkWindow" id="main_window">
+    <property name="default_width">800</property>
+    <property name="default_height">480</property>
+    <child>
+      <object class="GtkPaned" id="main_paned">
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkScrolledWindow" id="device_scroller">
+            <property name="hexpand">False</property>
+            <property name="width_request">260</property>
+            <child>
+              <object class="GtkTreeView" id="device_list">
+                <property name="headers_visible">False</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="position">260</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="right_box">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkScrolledWindow" id="file_scroller">
+                <child>
+                  <object class="GtkTreeView" id="file_list">
+                    <property name="headers_visible">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="button_box">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <child>
+                  <object class="GtkButton" id="upload_button">
+                    <property name="label">Upload</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="download_button">
+                    <property name="label">Download</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="delete_button">
+                    <property name="label">Delete</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="refresh_button">
+                    <property name="label">Refresh</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

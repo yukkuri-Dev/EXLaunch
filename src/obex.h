@@ -49,7 +49,7 @@
 
 #define OBEX_VERSION		0x11
 
-#define OBEX_FL_FIT_ONE_PACKET	0x01	/* This header must fit in one packet */
+#define OBEX_FL_FIT_ONE_PACKET	0x01	/* このヘッダは1パケットに収まる必要があります */
 
 #define OBEX_HDR_TYPE_UNICODE	(0 << 6)  /* zero terminated unicode string (network byte order) */
 #define OBEX_HDR_TYPE_BYTES	(1 << 6)  /* byte array */
@@ -73,7 +73,7 @@
 #define OBEX_HDR_ID_AUTHCHAL	 0x0d	/* Authentication challenge */
 #define OBEX_HDR_ID_AUTHRESP	 0x0e	/* Authentication response */
 #define OBEX_HDR_ID_CREATOR	 0x0f	/* indicates the creator of an object */
-#define OBEX_HDR_ID_AUTHINFO	 0x30	/* get authentication info */
+#define OBEX_HDR_ID_AUTHINFO	 0x30	/* 認証情報を取得 */
 #define OBEX_HDR_ID_CRYPTKEY	 0x31	/* file transfer key ?? */
 #define OBEX_HDR_ID_MASK	 0x3f
 

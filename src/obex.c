@@ -151,7 +151,7 @@ static int send_body(obex_object_t *object,
 	body_txh = (struct obex_byte_stream_hdr*) buf_reserve_end(txmsg, sizeof(struct obex_byte_stream_hdr));
 
 	if (!h->body_touched) {
-		/* This is the first time we try to send this header
+		/* 初めてこのヘッダを送信する場合
 		   obex_object_addheaders has added a struct_byte_stream_hdr
 		   before the actual body-data. We shall send this in every fragment
 		   so we just remove it for now.*/
@@ -294,13 +294,13 @@ static int obex_object_send(obex_t *self, obex_object_t *object)
 			buf_free(h->buf);
 			free(h);
 		} else if (h->length > self->mtu_tx) {
-			/* Header is bigger than MTU. This should not happen,
+			/* ヘッダが MTU より大きい。通常発生しません、
 			   because OBEX_ObjectAddHeader() rejects headers
 			   bigger than the MTU */
 			DEBUG(self, 0, "ERROR! header to big for MTU\n");
 			return -1;
 		} else {
-			/* This header won't fit. */
+			/* このヘッダは収まりません。 */
 			addmore = 0;
 		}
 
@@ -437,7 +437,7 @@ int obex_object_receive(obex_t *self, obex_object_t *object)
 				/* The body-header need special treatment */
 				if (obex_object_receive_body(object, msg, hi, source, len) < 0)
 						err = -1;
-				/* We have already handled this data! */
+				/* このデータは既に処理済みです！ */
 				source = NULL;
 			}
 			break;
@@ -485,7 +485,7 @@ int obex_object_receive(obex_t *self, obex_object_t *object)
 				element->hi = hi;
 
 				/* If we get an emtpy we have to deal with it...
-				 * This might not be an optimal way, but it works. */
+				 * 最適な方法ではないかもしれませんが、動作します。 */
 				if (len == 0) {
 					DEBUG(self, 4, "Got empty header. Allocating dummy buffer anyway\n");
 					element->buf = buf_new(1);
@@ -668,7 +668,7 @@ int obex_object_addheader(obex_t *self, obex_object_t *object, uint8_t hi,
 	unsigned int maxlen;
 
 	if (flags & OBEX_FL_FIT_ONE_PACKET) {
-		/* In this command all headers must fit in one packet! */
+		/* このコマンドではすべてのヘッダが1パケットに収まる必要があります！ */
 		DEBUG(self, 3, "Fit one packet!\n");
 		maxlen = self->mtu_tx - object->totallen - sizeof(struct obex_common_hdr);
 	} else {
@@ -739,7 +739,7 @@ int obex_object_addheader(obex_t *self, obex_object_t *object, uint8_t hi,
 		break;
 	}
 
-	/* Check if you can send this header without violating MTU or OBEX_FIT_ONE_PACKET */
+	/* このヘッダを MTU や OBEX_FIT_ONE_PACKET を破らずに送信できるか確認します */
 	if (element->hi != OBEX_HDR_BODY || (flags & OBEX_FL_FIT_ONE_PACKET)) {
 		if (maxlen < element->length) {
 			DEBUG(self, 0, "Header to big\n");

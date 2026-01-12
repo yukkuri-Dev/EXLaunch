@@ -63,17 +63,17 @@ typedef struct exword_t exword_t;
 
 /** @ingroup device
  *  Opens device in library mode.
- *  This mode is used to install and remove add-on dictionaries.
+ *  このモードはアドオン辞書のインストール/削除に使います。
  */
 #define OPEN_LIBRARY   0x0000
 /** @ingroup device
  *  Opens device in text mode.
- *  This mode is used to upload and delete text files.
+ *  このモードはテキストファイルのアップロード/削除に使います。
  */
 #define OPEN_TEXT      0x0100
 /** @ingroup device
  *  Opens device in CD mode.
- *  This mode is used to upload cd audio.
+ *  このモードは CD オーディオのアップロードに使います。
  */
 #define OPEN_CD        0x0200
 

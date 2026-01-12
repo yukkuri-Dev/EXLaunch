@@ -41,18 +41,18 @@
  */
 
 /** @defgroup device Device handling
- * This page details the functions used for opening and closing devices.
+ * このページはデバイスのオープン／クローズに使う関数を説明します。
  */
 
 /** @defgroup encoding Character encoding
- * This page details functions used for converting between different character encodings.
+ * 文字エンコーディング変換用の関数を説明します。
  */
 
 /** @defgroup misc Miscellaneous
  */
 
 /** @defgroup cmd Device commands
- * This page details the functions used to send commands to the device.
+ * デバイスへコマンドを送る関数を説明します。
  */
 
 static const char Model[] = {0,'_',0,'M',0,'o',0,'d',0,'e',0,'l',0,0};
@@ -140,11 +140,8 @@ static char * convert (iconv_t cd,
 }
 
 /** @ingroup encoding
- * Convert string to current locale.
- * This function will convert a string from the specified format to
- * the current locale.
- * @note The destination string is allocated by the function and must
- * be freed by the user.
+ * 文字列をカレントロケールに変換します。
+ * @note 返り値の文字列は関数内で確保されます。使用後は解放してください。
  * @param[in] fmt encoding format to convert from
  * @param[out] dst destination string
  * @param[out] dstsz size of destination string
@@ -166,11 +163,8 @@ char * convert_to_locale(char *fmt, char **dst, int *dstsz, const char *src, int
 }
 
 /** @ingroup encoding
- * Convert current locale to utf16.
- * This function will convert a string from the current locale to
- * UTF-16 encoding.
- * @note The destination string is allocated by the function and must
- * be freed by the user.
+ * カレントロケールを UTF-16 に変換します。
+ * @note 返り値の文字列は関数内で確保されます。使用後は解放してください。
  * @param[out] dst destination string
  * @param[out] dstsz size of destination string
  * @param[in] src source string
@@ -191,11 +185,8 @@ char * locale_to_utf16(char **dst, int *dstsz, const char *src, int srcsz)
 }
 
 /** @ingroup encoding
- * Convert utf16 to current locale.
- * This function will convert a string from UTF-16 to the current
- * locale.
- * @note The destination string is allocated by the function and must
- * be freed by the user.
+ * UTF-16 をカレントロケールに変換します。
+ * @note 返り値の文字列は関数内で確保されます。使用後は解放してください。
  * @param[out] dst destination string
  * @param[out] dstsz size of destination string
  * @param[in] src source string
@@ -310,7 +301,7 @@ static void exword_handle_callbacks(obex_t *self, obex_object_t *object, void *u
 
 /** @ingroup device
  * Opens device.
- * This function will open the attached exword device with the default
+ * デフォルト設定で接続されている exword デバイスを開きます。
  * options of \ref OPEN_LIBRARY and \ref LOCALE_JA.
  * @returns pointer to a device handle.
  */
@@ -321,7 +312,7 @@ exword_t * exword_open()
 
 /** @ingroup device
  * Opens device.
- * This function will open the attached device using the specified mode
+ * 指定したモードでデバイスを開きます。
  * and region.
  * @param options bit mask of mode and region
  * @returns pointer to a device handle.
@@ -393,7 +384,7 @@ error:
 
 /** @ingroup device
  * Closes device.
- * This function closes the device and performs necessary cleanup.
+ * デバイスを閉じ、必要なクリーンアップを行います。
  * @param self device handle
  */
 void exword_close(exword_t *self)
@@ -406,8 +397,8 @@ void exword_close(exword_t *self)
 }
 
 /** @ingroup misc
- * Sets the debug message level.
- * This function sets the debug level for the currentlt opened device.
+ * デバッグメッセージレベルを設定します。
+ * 開いているデバイスのデバッグレベルを設定します。
  * @param self device handle
  * @param level debug level (0-5)
  */
@@ -435,7 +426,7 @@ void exword_register_callbacks(exword_t *self, file_cb get, file_cb put, void *u
 
 /** @ingroup cmd
  * Send connect command.
- * @note Any commands sent before this will fail.
+ * @note これ以前に送ったコマンドは失敗します。
  * @param self device handle
  * @return response code
  */
@@ -452,7 +443,7 @@ int exword_connect(exword_t *self)
 
 /** @ingroup cmd
  * Upload a file to device.
- * This command will write the given file data as file filename to the device.
+ * 指定したデータをファイル名でデバイスに書き込みます。
  * @param self device handle
  * @param filename name of file being sent.
  * @param buffer pointer to file data.
@@ -486,7 +477,7 @@ int exword_send_file(exword_t *self, char* filename, char *buffer, int len)
 
 /** @ingroup cmd
  * Download a file from device.
- * This command will read a file from the device.
+ * デバイスからファイルを読み込みます。
  * @note buffer is allocated by the function and must be freed by the user.
  * @param[in] self device handle
  * @param[in] filename name of file being sent.
@@ -533,8 +524,9 @@ int exword_get_file(exword_t *self, char* filename, char **buffer, int *len)
 
 /** @ingroup cmd
  * Remove a file from device.
- * This command will remove the given file from the device.\n\n
- * Dataplus5 models require convert_to_unicode option when operating in Text mode.
+ * デバイスから指定ファイルを削除します。
+
+ * Dataplus5 モデルは Text モード時に convert_to_unicode オプションが必要です。
  * @param self device handle
  * @param filename name of file being sent
  * @param convert_to_unicode automatically convert filename to UTF-16 if true
@@ -570,7 +562,7 @@ int exword_remove_file(exword_t *self, char* filename, int convert_to_unicode)
 
 /** @ingroup cmd
  * Format SD card.
- * This command will format the inserted SD card.
+ * 挿入中の SD カードをフォーマットします。
  * @param self device handle
  * @return response code
  */
@@ -632,8 +624,8 @@ int exword_setpath(exword_t *self, uint8_t *path, uint8_t mkdir)
 }
 
 /** @ingroup cmd
- * Get model information.
- * This function retrieves the model information of the connected device.
+ * モデル情報を取得します。
+ * 接続中デバイスのモデル情報を取得します。
  * @param[in] self device handle
  * @param[out] model model information
  * @return response code
@@ -682,9 +674,9 @@ int exword_get_model(exword_t *self, exword_model_t * model)
 }
 
 /** @ingroup cmd
- * Get storage capacity.
- * This function retrieves the storage capacity the the currently selected storage medium.\n
- * The storage medium being accessed is selected using \ref exword_setpath.
+ * ストレージ容量を取得します。
+ * 選択中のストレージの容量を取得します。
+ * アクセスするストレージは \ref exword_setpath で選択します。
  * @param[in] self device handle
  * @param[out] cap capacity
  * @return response code
@@ -716,8 +708,8 @@ int exword_get_capacity(exword_t *self, exword_capacity_t *cap)
 }
 
 /** @ingroup cmd
- * Get file list.
- * This function will retreive the file list for the currently set path.\n
+ * ファイル一覧を取得します。
+ * 現在のパスのファイル一覧を取得します。
  * Entries must be freed with \ref exword_free_list.
  * @param[in] self device handle
  * @param[out] entries array of directory entries
@@ -778,7 +770,7 @@ void exword_free_list(exword_dirent_t *entries)
 
 /** @ingroup cmd
  * Set userid.
- * This function updates the user_id of connected device.
+ * 接続デバイスの user_id を更新します。
  * @param self device handle
  * @param id new user_id
  * @return response code
@@ -803,8 +795,9 @@ int exword_userid(exword_t *self, exword_userid_t id)
 
 /** @ingroup cmd
  * Generate new CryptKey.
- * This function is used to gerneate the CryptKey used for encryptng dictionaries.\n\n
- * key.blk1 and key.blk2 are used for input and the key will be returned in key.key.
+ * 辞書暗号化に使う CryptKey を生成します。
+
+ * key.blk1 と key.blk2 が入力に使われ、生成された鍵は key.key に返されます。
  * @param[in] self device handle
  * @param[in,out] key CryptKey info
  * @return response code
@@ -837,7 +830,7 @@ int exword_cryptkey(exword_t *self, exword_cryptkey_t *key)
 
 /** @ingroup cmd
  * Set add-on dictionary name information.
- * This function is used to register the add-on dictionary with device.
+ * アドオン辞書をデバイスに登録します。
  * @param self device handle
  * @param name add-on name
  * @param dir install directory
@@ -873,7 +866,7 @@ int exword_cname(exword_t *self, char *name, char* dir)
 
 /** @ingroup cmd
  * Unlock device.
- * This function needs to be called after dding or removing add-on dictionaries.
+ * アドオン辞書を追加/削除した後に呼び出します。
  * @param self device handle
  * @return response code
  */
@@ -897,7 +890,7 @@ int exword_unlock(exword_t *self)
 
 /** @ingroup cmd
  * Lock device.
- * This function needs to be called prior to adding or removing add-on dictionaries.
+ * アドオン辞書の追加/削除の前に呼び出します。
  * @param self device handle
  * @return response code
  */
@@ -921,7 +914,7 @@ int exword_lock(exword_t *self)
 
 /** @ingroup cmd
  * Authenticate to device.
- * This function will try to authenticate to the currently connected device.
+ * 接続中のデバイスへ認証を試みます。
  * @param self device handle
  * @param challenge 20 byte challenge key
  * @return response code
@@ -947,7 +940,7 @@ int exword_authchallenge(exword_t *self, exword_authchallenge_t challenge)
 /** @ingroup cmd
  * Reset authentication info.
  * On return info.challenge will contain the new challenge key for the device.
- * @note Issuing this command causes the device to delete all installed dictionaries.
+ * @note このコマンドを送るとデバイス上の全てのインストール済み辞書が削除されます。
  * @param[in] self device handle
  * @param[in, out] info authentication info
  * @return response code
@@ -980,7 +973,7 @@ int exword_authinfo(exword_t *self, exword_authinfo_t *info)
 
 /** @ingroup cmd
  * Disconnect from device.
- * This function should be the last command sent and will disconnect from the device.
+ * この関数は最後に呼び出すべきで、デバイスから切断します。
  * @param self device handle
  * @return response code
  */
@@ -996,7 +989,7 @@ int exword_disconnect(exword_t *self)
 }
 
 /** @ingroup misc
- * Converts response code to string
+ * レスポンスコードを文字列に変換します。
  * @note return value is a static string and should not be freed.
  * @param rsp response code
  * @return response message

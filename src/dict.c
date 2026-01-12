@@ -1,4 +1,4 @@
-/* dict.c - code for removing/installing and dumping dictionaries
+/* dict.c - 辞書の削除・インストール・ダンプ処理のコード
  *
  * Copyright (C) 2010 - Brian Johnson <brijohn@gmail.com>
  *

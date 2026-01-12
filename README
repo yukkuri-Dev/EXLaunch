@@ -1,96 +1,83 @@
-Description
+説明
 =========================
 
-libexword is a library that implements the low-level OBEX commands
-used to communicate Casio EX-word dictionaries. 
+libexword は Casio EX-word 辞書と通信するための低レベル OBEX コマンドを実装したライブラリです。
 
-This library comes with a program called exword that uses libexword
-to allow manipulation of files on the dictionary.
+このライブラリには `exword` というプログラムが含まれており、辞書上のファイル操作を行えます。
 
-Features:
-	* list files on device
-	* upload/download files
-	* delete files
-	* install/remove add-on dictionaries
+機能:
+	* デバイス上のファイル一覧表示
+	* ファイルのアップロード/ダウンロード
+	* ファイル削除
+	* アドオン辞書のインストール/削除
 
 
-Commands
+コマンド
 ==========================
 
 connect [mode] [region]
-	This command connects to an attached EX-word dictionary. It
-	accepts two optional parameters the first specifies the connection
-	mode and be bee either library, text, or cd. The second one is the
-	region of your dictionary and is a two letter country code.
+	接続コマンド：添付の EX-word 辞書に接続します。mode は library, text, cd のいずれか、
+	region は辞書の地域（2文字の国コード）です。
 
-	The default values for mode and region are library and ja.
+	デフォルト: mode=library, region=ja
 
 disconnect
-	This command simply disconnects from the currently connected dictionary.
+	接続を切断します。
 
 model
-	This command displays the raw model information about connected device.
+	接続中のデバイスのモデル情報を表示します。
 
 capacity
-	This command displays the capacity of the currently selected storage medium.
+	選択中の記憶領域の容量を表示します。
 
 format
-	This command will format the currently inserted SD card.
+	挿入されている SD カードをフォーマットします。
 
 list
-	This command will list all files and directories in your current directory.
+	カレントディレクトリのファイルやディレクトリを一覧表示します。
 
 delete <filename>
-	This command deletes deletes the specified file from the currently set
-	directory on the connected device
+	カレントディレクトリの指定ファイルを削除します。
 
 send <filename>
-	This command will upload a file to the connected device. <filename> should
-	specifiy the fullpath to the file on your local filesystem.
+	ファイルをデバイスにアップロードします。<filename> はローカルのフルパスを指定してください。
 
 get <filename>
-	This command will download a file from the connected device. <filename> should
-	specifiy the fullpath on your local filesystem where the file should be saved.
+	デバイスからファイルをダウンロードします。<filename> は保存先のローカルのフルパスを指定してください。
 
 setpath <path>
-	This sets the current path on your dictionary. The path is set using the
-	following format: <sd|mem://path>.
+	デバイスのカレントパスを設定します。形式は <sd|mem://path> です。
 
 set <option> [value]
-	This command sets various configutation options. If not value is given for the
-	specified option its current value is printed out. 
+	各種設定を変更します。value を省略すると現在値を表示します。
 
-	Options:
-		debug - This option sets the debug level (0-5)
-		mkdir - This option tells setpath if it should create non-existent directories (yes|no)
+	オプション:
+		debug - デバッグレベルを設定します (0-5)
+		mkdir - setpath が存在しないディレクトリを作成するか (yes|no)
 
 dict <sub-function>
-	This command is used to manage installed add-on dictionaries. It only works
-	when connected in library mode.
+	アドオン辞書を管理します。library モードでのみ機能します。
 
-	Subfunctions:
+	サブコマンド:
 		reset <username>
-			This will reset your authentication information using the specified
-			username. When finished it will display the new authkey as well as
-			save the username/authkey pair to users.dat file. It also deletes any
-			already installed add-ons.
+			指定したユーザ名で認証情報をリセットします。完了後、新しい authkey を表示し、
+			username/authkey の組を users.dat に保存します。既存のアドオンは削除されます。
 
 		auth <username> [key]
-			This peforms authentication and must be called before any other subfunction
-			except for list and reset. If key is not specified it will try to find the
-			username in the users.dat file.
+			認証を行います。list と reset 以外の操作を行う前に呼び出してください。
+			key 未指定の場合は users.dat からユーザ名を探します。
 
 		list
-			This command will list currently installed dictionaries.
+			インストール済み辞書を一覧表示します。
 
 		decrypt <id>
-			This downloads and decrypts the dictionary with the specified id.
+			指定された id の辞書をダウンロードして復号します。
 
 		remove <id>
-			This deletes the dictionary with the specified id.
+			指定された id の辞書を削除します。
 
 		install <id>
-			This will install the dictionary with the specified id.
+			指定された id の辞書をインストールします。
 
 
 
